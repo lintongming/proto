@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<script>
+    //封装type方法 返回数据类型 判断target什么类型
+    //分两类 原始值 引用值 u s b n n f o a
+    // 区分引用值
+    //     let arr = [];
+    //     mytype(arr);
+    //     function mytype(target) {
+    //         let ret = typeof(target);
+    //         var template = {
+    //             "[object Array]"   : 'array',
+    //             "[object Object]"  : 'object',
+    //             "[object Number]"  : 'number - object',
+    //             "[object Boolean]" : 'boolean - object',
+    //             "[object String]"  : 'string - object',
+    //
+    //         };
+    //
+    //         if (target === null) {
+    //             return 'null';
+    //         }
+    //         if (ret === "object") {
+    //             var str = Object.prototype.toString.call(target);
+    //             return template[str];
+    //         } else {
+    //             return typeof(target);
+    //         }
+    //     }
+    //
+    //
+    //     //数组去重
+    //     Array.prototype.unique1 = function () {
+    //         var result = [];
+    //
+    //         var hash = {};
+    //         for (var i = 0; i < this.length; i++) {
+    //             if (hash[this[i]]) {
+    //                 hash[this[i]]++;
+    //             } else {
+    //                 result.push(this[i]);
+    //                 hash[this[i]] = 1;
+    //             }
+    //         }
+    //         return {result, hash};
+    //     };
+    //     //4
+    //     var myarr = [11,12,2,2,3,4,5,5,6,7,7,8,9,9,43,2,1,5,5,7,0,0];
+    //     Array.prototype.unique = function () {
+    //         var temp = {},//temp 临时的意思
+    //             arr = [],
+    //             len = this.length;
+    //         for(var i = 0; i < len; i ++){
+    //             if(!temp[this[i]]){
+    //                 temp[this[i]] = 'a';
+    //                 arr.push(this[i]);
+    //             }
+    //         }
+    //         return {temp,arr};
+    //     };
+    //     //5
+    //     function unique5(arr) {
+    //         // 创建结果数组
+    //         var result = [];
+    //         //创建hash对象，用来代替indexOf
+    //         var hash = {};
+    //         for (var i = 0; i < arr.length; i++) {
+    //             //key就是数组元素的类型+数组元素，用来区分number和"number"
+    //             var key = typeof(arr[i]) + arr[i];
+    //             //如果hash对象中的key属性值不等于1（说明hash对象中不存在key属性），就把arr[i]压入结果数组result，同时设置hash的key属性值为1
+    //             if (hash[key] !== 1) {
+    //                 result.push(arr[i]);
+    //                 hash[key] = 1;
+    //             }
+    //         }
+    //         return result;
+    //     }
+    //
+    //     //6方法五和方法六差不多，核心思想和前面的几种方法一样，但是还是有一些不同的，方法五中写var key = typeof(arr[i]) + arr[i];这句是因为在 JavaScript 里，对象的键只能是字符串，所以为了区分数组中的数字，和能转为数字的字符串，就需要这句了，而方法六就不能区分了，
+    //     Array.prototype.unique6 = function () {
+    //         // 创建结果数组
+    //         var result = [];
+    //         //创建hash对象，用来代替indexOf
+    //         var hash = {};
+    //         for (var i = 0; i < this.length; i++) {
+    //             // hash[this[i]] ，这是看 hash 中是否有 this[i] 这个属性，如果有，该属性值就+1，这个值就是出现的次数
+    //             if (hash[this[i]]) {
+    //                 hash[this[i]]++;
+    //             }
+    //             //如果，hash中没有this[i]属性，则将this[i]压入结果数组result，同时给这个属性，赋值为1
+    //             else {
+    //                 result.push(this[i]);
+    //                 hash[this[i]] = 1;
+    //             }
+    //         }
+    // //最后返回了一个对象，包括了结果数组，和带次数的hash对象
+    //         return {result, hash};
+    //     };
+    //
+    //     //7这次终于是不一样了，思路已经换了，这次需要先把数组排序，这点很重要，排序之后，再进行比较，比较的是，调用方法的数组和结果数组，其实也就是在比较调用方法的数组中的，第i项和第i-1项，如果相等，就什么都不做，不相等就把第i项压入结果数组。
+    //     Array.prototype.unique7 = function () {
+    //         //先排序
+    //         this.sort();
+    //         //创建结果数组
+    //         var result = [this[0]];
+    //         /* 遍历 调用unique7()方法的数组 如果该数组中的第i项，
+    //         不等于结果数组result中的最后一项，就把第i项，压入结果数组 */
+    //         for (var i = 1; i < this.length; i++) {
+    //             if (this[i] !== result[result.length - 1]) {
+    //                 result.push(this[i]);
+    //             }
+    //         }
+    //         return result;
+    //     };
+    //
+    //     //深度克隆
+    //
+    //
+    //     function deepClone(origin, target) {
+    //         var target = target || {},
+    //             toStr = Object.prototype.toString,
+    //             arrStr = "[object Array]";
+    //
+    //         for (var key in origin) {
+    //             if (origin.hasOwnProperty(key)) {
+    //                 if (origin !== "null" && typeof (origin[key]) === "object") {
+    //                     // if(toStr.call(origin[key]) == arrStr){
+    //                     //     target[key] = [];
+    //                     // }else{
+    //                     //     target[key] = {};
+    //                     // }
+    //                     target[key] = toStr.call(origin[key]) === arrStr ? [] : {};
+    //                     deepClone(origin[key], target[key]);
+    //                 } else {
+    //                     target[key] = origin[key];
+    //                 }
+    //             }
+    //         }
+    //         return target;
+    //     }
+    // //继承 圣杯模式
+    //     function inherit( Target , Origin){
+    //         function F(){}
+    //         F.prototype = Origin.prototype;
+    //         Target.prototype = new F();
+    //         Target.prototype.constructor = Target;  //把Target的构造函数指向归位
+    //         Target.prototype.uber= Origin.prototype; //为了让我们知道Target真正继承自谁
+    //     }
+
+    //把字符串分割成数组
+    // 循环 数组
+    var str = 'qqqqwqaeeee';
+    var arr = str.split('');
+    var obj = {};
+    for (var i = 0; i < arr.length; i++) {
+        // var sum = 0;
+        if (!obj[arr[i]]) {
+            obj[arr[i]] = 1;
+        } else {
+            obj[arr[i]] = -1;
+        }
+    }
+    for (var key in obj) {
+
+    }
+    console.log(obj);
+
+    // console.log(obj);
+
+
+    function charStats(str) {
+        var visitStats = {};
+
+        for (var i = 0; i < str.length; i++) {
+            var char = str[i];
+            if (!visitStats[char]++)
+                visitStats[char] = 1;
+        }
+        return visitStats;
+    }
+
+    console.log(charStats(str)); // {a: 3, b: 2, c: 2, d: 1}
+
+
+</script>
+</body>
+
+</html>
